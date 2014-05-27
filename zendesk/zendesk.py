@@ -205,6 +205,17 @@ class Zendesk(object):
         # Execute dynamic method and pass in keyword args as data to API call
         return call.__get__(self)
 
+    def get_next_page(self, response):
+        print response.get('next_page')
+        next_page_response = requests.get(
+            url=response.get('next_page'),
+            auth=(self.zendesk_username,
+                  self.zendesk_password),
+            headers=self.headers
+        )
+
+        return self._response_handler(next_page_response)
+
     @staticmethod
     def _response_handler(response):
         """
