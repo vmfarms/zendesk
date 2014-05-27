@@ -24,7 +24,6 @@ __author__ = "Max Gutman <max@eventbrite.com>"
 __version__ = "1.1.1"
 
 import re
-import httplib2
 import urllib
 import base64
 try:
@@ -34,6 +33,8 @@ except:
 from httplib import responses
 from endpoints import mapping_table as mapping_table_v1
 from endpoints_v2 import mapping_table as mapping_table_v2
+
+import requests
 
 V2_COLLECTION_PARAMS = [
     'page',
@@ -119,15 +120,6 @@ class Zendesk(object):
                 'Content-Type': 'application/json'
             }
 
-        # Set http client and authentication
-        self.client = httplib2.Http(**client_args)
-        if (self.zendesk_username is not None and
-                self.zendesk_password is not None):
-            self.client.add_credentials(
-                self.zendesk_username,
-                self.zendesk_password
-            )
-
         self.api_version = api_version
         if self.api_version == 1:
             self.mapping_table = mapping_table_v1
@@ -162,7 +154,7 @@ class Zendesk(object):
             if self.api_version == 2:
                 path = "/api/v2" + path
 
-            method = api_map['method']
+            method = api_map['method'].lower()
             status = api_map['status']
             valid_params = api_map.get('valid_params', ())
             # Body can be passed from data or in args
@@ -197,15 +189,16 @@ class Zendesk(object):
                 del(self.headers["Authorization"])
 
             # Make an http request (data replacements are finalized)
-            response, content = \
-                self.client.request(
-                    url,
-                    method,
-                    body=json.dumps(body),
-                    headers=self.headers
-                )
+            endpoint_caller = getattr(requests, method)
+            print endpoint_caller
+            response = endpoint_caller(url, 
+                                       data=json.dumps(body), 
+                                       auth=(self.zendesk_username,
+                                             self.zendesk_password),
+                                       headers=self.headers)
+            print response
             # Use a response handler to determine success/fail
-            return self._response_handler(response, content, status)
+            return self._response_handler(response)
 
         # Missing method is also not defined in our mapping table
         if api_call not in self.mapping_table:
@@ -215,7 +208,7 @@ class Zendesk(object):
         return call.__get__(self)
 
     @staticmethod
-    def _response_handler(response, content, status):
+    def _response_handler(response):
         """
         Handle response as callback
 
@@ -229,15 +222,15 @@ class Zendesk(object):
         # Just in case
         if not response:
             raise ZendeskError('Response Not Found')
-        response_status = int(response.get('status', 0))
-        if response_status != status:
-            raise ZendeskError(content, response_status)
+        if not response.ok:
+            raise ZendeskError(response.content, response.status_code)
 
         # Deserialize json content if content exist. In some cases Zendesk
         # returns ' ' strings. Also return false non strings (0, [], (), {})
-        if response.get('location'):
-            return response.get('location')
-        elif content.strip():
-            return json.loads(content)
+        result = response.json()
+        if result.get('location'):
+            return result.get('location')
+        elif result:
+            return result
         else:
-            return responses[response_status]
+            return responses[response.status_code]
