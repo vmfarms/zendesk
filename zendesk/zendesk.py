@@ -206,7 +206,11 @@ class Zendesk(object):
         return call.__get__(self)
 
     def get_next_page(self, response):
-        print response.get('next_page')
+        """ Gets the next page result from a given paginated response
+
+        response - JSON-encoded response from Zendesk REST API
+
+        """
         next_page_response = requests.get(
             url=response.get('next_page'),
             auth=(self.zendesk_username,
