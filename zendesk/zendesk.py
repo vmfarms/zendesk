@@ -218,7 +218,7 @@ class Zendesk(object):
         the body of 'content' has our response.
         """
         # Just in case
-        if not response:
+        if not response.content:
             raise ZendeskError('Response Not Found')
         if not response.ok:
             raise ZendeskError(response.content, response.status_code)
