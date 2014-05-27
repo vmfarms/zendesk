@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from distutils.core import setup
+from setuptools import setup
 
 setup(
 	# Basic package information.
@@ -10,7 +10,7 @@ setup(
 	author_email = 'max@eventbrite.com',
 	packages = ['zendesk'],
 	include_package_data = True,
-	install_requires = ['httplib2', 'simplejson'],
+	install_requires = ['requests', 'simplejson'],
 	license='LICENSE.txt',
 	url = 'https://github.com/eventbrite/zendesk',
 	keywords = 'zendesk api helpdesk',

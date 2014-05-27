@@ -7,9 +7,9 @@ account in their application.
 
 Requirements
 -----------------------------------------------------------------------------------------------------
-httplib2 is used for authentication and requests
+requests is used for authentication and requests
 
-    (pip install | easy_install) httplib2
+    (pip install | easy_install) requests
 
 simplejson is used to serialze and deserialze requests and responses
 
