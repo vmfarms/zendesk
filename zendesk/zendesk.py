@@ -190,13 +190,11 @@ class Zendesk(object):
 
             # Make an http request (data replacements are finalized)
             endpoint_caller = getattr(requests, method)
-            print endpoint_caller
             response = endpoint_caller(url, 
                                        data=json.dumps(body), 
                                        auth=(self.zendesk_username,
                                              self.zendesk_password),
                                        headers=self.headers)
-            print response
             # Use a response handler to determine success/fail
             return self._response_handler(response)
 
