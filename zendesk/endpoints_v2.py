@@ -657,6 +657,42 @@ mapping_table = {
         'valid_params' : ['ids'],
         'method': 'DELETE',
     },
+
+    # Targets
+    'list_targets': {
+        'path': '/targets.json',
+        'method': 'GET',
+    },
+    'create_target': {
+        'path': '/targets.json',
+        'method': 'POST',
+    },
+    'get_target': {
+        'path': '/targets/{{target_id}}.json',
+        'method': 'GET',
+    },
+    'update_target': {
+        'path': '/targets/{{target_id}}.json',
+        'method': 'PUT',
+    },
+
+    # Triggers
+    'list_triggers': {
+        'path': '/triggers.json',
+        'method': 'GET',
+    },
+    'create_trigger': {
+        'path': '/triggers.json',
+        'method': 'POST',
+    },
+    'get_trigger': {
+        'path': '/triggers/{{trigger_id}}.json',
+        'method': 'GET',
+    },
+    'update_trigger': {
+        'path': '/triggers/{{trigger_id}}.json',
+        'method': 'PUT',
+    },
 }
 
 # Patch mapping table with correct HTTP Status expected
