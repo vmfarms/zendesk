@@ -5,8 +5,8 @@ from setuptools import setup
 setup(
 	# Basic package information.
 	name = 'Zendesk',
-	author = 'Max Gutman, Stefan Tjarks',
-	version = '1.1.1',
+	author = 'Max Gutman, Stefan Tjarks, Matthew de Verteuil',
+	version = '1.2',
 	author_email = 'max@eventbrite.com',
 	packages = ['zendesk'],
 	include_package_data = True,
