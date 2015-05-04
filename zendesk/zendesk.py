@@ -40,6 +40,7 @@ V2_COLLECTION_PARAMS = [
     'page',
     'per_page',
     'sort_order',
+    'include',
 ]
 
 
@@ -190,8 +191,8 @@ class Zendesk(object):
 
             # Make an http request (data replacements are finalized)
             endpoint_caller = getattr(requests, method)
-            response = endpoint_caller(url, 
-                                       data=json.dumps(body), 
+            response = endpoint_caller(url,
+                                       data=json.dumps(body),
                                        auth=(self.zendesk_username,
                                              self.zendesk_password),
                                        headers=self.headers)
